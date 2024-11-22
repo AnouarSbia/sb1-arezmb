@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getAllProducts } from '../utils/products';
+
+const products = getAllProducts();
+---
+
+<Layout title="Products | Store">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">Our Products</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {products.map(product => <ProductCard {...product} />)}
+  </div>
+</Layout>

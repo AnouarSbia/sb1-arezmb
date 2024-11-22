@@ -1,0 +1,98 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { db } from '../../../db/client';
+
+const products = await db.execute(`
+  SELECT products.*, categories.name as category_name 
+  FROM products 
+  JOIN categories ON products.category_id = categories.id 
+  ORDER BY products.created_at DESC
+`);
+---
+
+<AdminLayout title="إدارة المنتجات | لوحة التحكم">
+  <div class="min-h-screen bg-gray-100">
+    <div class="py-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl font-bold text-gray-900">إدارة المنتجات</h1>
+          <a
+            href="/admin/products/new"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            إضافة منتج جديد
+          </a>
+        </div>
+
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  الصورة
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  العنوان
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  الفئة
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  السعر
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  الإجراءات
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              {products.rows.map((product: any) => (
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      class="h-10 w-10 rounded-lg object-cover"
+                    />
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {product.title}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {product.category_name}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {product.price} دج
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex gap-2">
+                      <a
+                        href={`/admin/products/${product.id}/edit`}
+                        class="text-blue-600 hover:text-blue-900"
+                      >
+                        تعديل
+                      </a>
+                      <form
+                        method="POST"
+                        action={`/api/admin/products/${product.id}/delete`}
+                        class="inline"
+                      >
+                        <button
+                          type="submit"
+                          class="text-red-600 hover:text-red-900"
+                          onclick="return confirm('هل أنت متأكد من حذف هذا المنتج؟')"
+                        >
+                          حذف
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

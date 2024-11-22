@@ -1,0 +1,110 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../utils/auth';
+
+
+---
+
+<AdminLayout title="لوحة التحكم">
+  <div class="min-h-screen bg-gray-100">
+    <nav class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <h1 class="text-xl font-bold text-gray-800">لوحة التحكم</h1>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <form action="/api/admin/logout" method="POST">
+              <button
+                type="submit"
+                class="text-gray-600 hover:text-gray-900"
+              >
+                تسجيل الخروج
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="py-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Categories Card -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <div class="mr-5">
+                  <h3 class="text-lg font-medium text-gray-900">الفئات</h3>
+                  <div class="mt-1">
+                    <a
+                      href="/admin/categories"
+                      class="text-sm text-blue-600 hover:text-blue-900"
+                    >
+                      إدارة الفئات
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products Card -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+                <div class="mr-5">
+                  <h3 class="text-lg font-medium text-gray-900">المنتجات</h3>
+                  <div class="mt-1">
+                    <a
+                      href="/admin/products"
+                      class="text-sm text-blue-600 hover:text-blue-900"
+                    >
+                      إدارة المنتجات
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Orders Card -->
+          <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+                <div class="mr-5">
+                  <h3 class="text-lg font-medium text-gray-900">الطلبات</h3>
+                  <div class="mt-1">
+                    <a
+                      href="/admin/orders"
+                      class="text-sm text-blue-600 hover:text-blue-900"
+                    >
+                      إدارة الطلبات
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

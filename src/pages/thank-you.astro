@@ -1,0 +1,72 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getAllProducts } from '../utils/products';
+
+const suggestedProducts = getAllProducts().slice(0, 3);
+---
+
+<Layout title="شكراً لك | متجرنا">
+  <div class="max-w-2xl mx-auto text-center mb-12">
+    <div class="mb-8">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg
+          class="w-8 h-8 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">شكراً لطلبك!</h1>
+      <p class="text-gray-600">
+        تم تأكيد طلبك وسيتم شحنه قريباً.
+        سنرسل لك بريداً إلكترونياً بمعلومات التتبع بمجرد شحن طلبك.
+      </p>
+    </div>
+
+    <div class="bg-gray-50 rounded-lg p-6 mb-8">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">ملخص الطلب</h2>
+      <div class="flex justify-between mb-2">
+        <span class="text-gray-600">رقم الطلب:</span>
+        <span class="text-gray-900 font-medium" id="orderNumber"></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-600">تاريخ الطلب:</span>
+        <span class="text-gray-900 font-medium" id="orderDate"></span>
+      </div>
+    </div>
+
+    <a
+      href="/products"
+      class="inline-block bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition"
+    >
+      مواصلة التسوق
+    </a>
+  </div>
+
+  <div class="border-t border-gray-200 pt-12">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">قد يعجبك أيضاً</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {suggestedProducts.map(product => <ProductCard {...product} />)}
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const orderNumber = `ORD-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+  document.getElementById('orderNumber')!.textContent = orderNumber;
+
+  const orderDate = new Intl.DateTimeFormat('ar-SA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(new Date());
+  document.getElementById('orderDate')!.textContent = orderDate;
+</script>

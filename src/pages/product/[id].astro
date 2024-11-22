@@ -1,0 +1,65 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AddToCartButton from '../../components/AddToCartButton';
+import ImageGallery from '../../components/ImageGallery';
+import { getAllProducts } from '../../utils/products';
+
+export function getStaticPaths() {
+  const products = getAllProducts();
+  return products.map(product => ({
+    params: { id: product.id.toString() },
+    props: { product }
+  }));
+}
+
+const { product } = Astro.props;
+
+const productImages = [
+  product.image,
+  "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=800",
+  "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?w=800",
+  "https://images.unsplash.com/photo-1490345046163-18cac65f431c?w=800"
+];
+
+const specs = {
+  "الأبعاد": "30 × 15 × 38 سم",
+  "الوزن": "1 كجم",
+  "المواد": "مواد عالية الجودة",
+  "اللون": "متعدد الألوان"
+};
+---
+
+<Layout title={`${product.title} | متجرنا`}>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <ImageGallery images={productImages} title={product.title} client:load />
+
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">{product.title}</h1>
+      <p class="text-2xl font-semibold text-gray-900 mt-4">{product.price} دج</p>
+      <p class="text-gray-600 mt-4">
+        منتج عالي الجودة مثالي لاحتياجاتك. يتميز بمواد ممتازة وحرفية عالية.
+      </p>
+
+      <div class="mt-8">
+        <AddToCartButton productId={product.id} price={product.price} client:load />
+      </div>
+
+      <div class="mt-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">المواصفات</h2>
+        <dl class="grid grid-cols-1 gap-4">
+          {Object.entries(specs).map(([key, value]) => (
+            <div class="border-b border-gray-200 pb-4">
+              <dt class="font-medium text-gray-600">{key}</dt>
+              <dd class="mt-1 text-gray-900">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script define:vars={{ product }}>
+  import { trackViewContent } from '../utils/pixel';
+  trackViewContent(product.id, product.price);
+</script>

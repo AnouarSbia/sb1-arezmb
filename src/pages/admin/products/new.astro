@@ -1,0 +1,97 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { db } from '../../../db/client';
+import { isAuthenticated } from '../../../utils/auth';
+
+if (!await isAuthenticated(Astro.request)) {
+  return Astro.redirect('/admin/login');
+}
+
+const categories = await db.execute('SELECT * FROM categories ORDER BY name');
+---
+
+<AdminLayout title="إضافة منتج جديد | لوحة التحكم">
+  <div class="min-h-screen bg-gray-100 py-6">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white shadow rounded-lg p-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">إضافة منتج جديد</h1>
+
+        <form action="/api/admin/products/create" method="POST" class="space-y-6">
+          <div>
+            <label for="title" class="block text-sm font-medium text-gray-700">عنوان المنتج</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="category_id" class="block text-sm font-medium text-gray-700">الفئة</label>
+            <select
+              id="category_id"
+              name="category_id"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="">اختر فئة</option>
+              {categories.rows.map((category: any) => (
+                <option value={category.id}>{category.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label for="price" class="block text-sm font-medium text-gray-700">السعر (دج)</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              step="0.01"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="image" class="block text-sm font-medium text-gray-700">رابط الصورة</label>
+            <input
+              type="url"
+              id="image"
+              name="image"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">الوصف</label>
+            <textarea
+              id="description"
+              name="description"
+              rows="4"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-4">
+            <a
+              href="/admin/products"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              إلغاء
+            </a>
+            <button
+              type="submit"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+            >
+              إضافة المنتج
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

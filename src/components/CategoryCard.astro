@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  image: string;
+  count: number;
+}
+
+const { title, image, count } = Astro.props;
+---
+
+<a href={`/category/${title.toLowerCase()}`} class="group relative overflow-hidden rounded-lg">
+  <img 
+    src={image} 
+    alt={title}
+    class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+    <div class="absolute bottom-0 left-0 p-6">
+      <h3 class="text-xl font-semibold text-white">{title}</h3>
+      <p class="text-sm text-gray-200">{count} Products</p>
+    </div>
+  </div>
+</a>

@@ -1,0 +1,124 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { db } from '../../../db/client';
+
+const orders = await db.execute(`
+  SELECT * FROM orders ORDER BY created_at DESC
+`);
+
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'processing':
+      return 'bg-blue-100 text-blue-800';
+    case 'completed':
+      return 'bg-green-100 text-green-800';
+    case 'cancelled':
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
+
+const getStatusText = (status: string) => {
+  switch (status) {
+    case 'pending':
+      return 'قيد الانتظار';
+    case 'processing':
+      return 'قيد المعالجة';
+    case 'completed':
+      return 'مكتمل';
+    case 'cancelled':
+      return 'ملغي';
+    default:
+      return status;
+  }
+};
+---
+
+<AdminLayout title="إدارة الطلبات | لوحة التحكم">
+  <div class="min-h-screen bg-gray-100">
+    <div class="py-6">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">إدارة الطلبات</h1>
+
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  رقم الطلب
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  العميل
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  المجموع
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  الحالة
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  التاريخ
+                </th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  الإجراءات
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              {orders.rows.map((order: any) => (
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    #{order.id}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {order.customer_name}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {order.total} دج
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(order.status)}`}>
+                      {getStatusText(order.status)}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(order.created_at).toLocaleDateString('ar-SA')}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex gap-2">
+                      <a
+                        href={`/admin/orders/${order.id}`}
+                        class="text-blue-600 hover:text-blue-900"
+                      >
+                        عرض التفاصيل
+                      </a>
+                      <form
+                        method="POST"
+                        action={`/api/admin/orders/${order.id}/update-status`}
+                        class="inline"
+                      >
+                        <select
+                          name="status"
+                          class="text-sm border-gray-300 rounded-md"
+                          onchange="this.form.submit()"
+                        >
+                          <option value="pending" selected={order.status === 'pending'}>قيد الانتظار</option>
+                          <option value="processing" selected={order.status === 'processing'}>قيد المعالجة</option>
+                          <option value="completed" selected={order.status === 'completed'}>مكتمل</option>
+                          <option value="cancelled" selected={order.status === 'cancelled'}>ملغي</option>
+                        </select>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

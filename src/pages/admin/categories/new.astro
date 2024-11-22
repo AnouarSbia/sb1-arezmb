@@ -1,0 +1,57 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { isAuthenticated } from '../../../utils/auth';
+
+if (!await isAuthenticated(Astro.request)) {
+  return Astro.redirect('/admin/login');
+}
+---
+
+<AdminLayout title="إضافة فئة جديدة | لوحة التحكم">
+  <div class="min-h-screen bg-gray-100 py-6">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white shadow rounded-lg p-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">إضافة فئة جديدة</h1>
+
+        <form action="/api/admin/categories/create" method="POST" class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">اسم الفئة</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="image" class="block text-sm font-medium text-gray-700">رابط الصورة</label>
+            <input
+              type="url"
+              id="image"
+              name="image"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div class="flex justify-end gap-4">
+            <a
+              href="/admin/categories"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              إلغاء
+            </a>
+            <button
+              type="submit"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+            >
+              إضافة الفئة
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

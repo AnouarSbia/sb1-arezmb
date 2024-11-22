@@ -1,0 +1,15 @@
+---
+import CartButton from './CartButton';
+---
+
+<header class="bg-white shadow-sm">
+  <nav class="container mx-auto px-4 py-4">
+    <div class="flex justify-between items-center">
+      <a href="/" class="text-xl font-bold text-gray-800">متجرنا</a>
+      <div class="flex items-center gap-4">
+        <a href="/products" class="text-gray-600 hover:text-gray-800">المنتجات</a>
+        <CartButton client:only="react" />
+      </div>
+    </div>
+  </nav>
+</header>

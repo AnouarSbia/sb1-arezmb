@@ -1,0 +1,25 @@
+---
+import ProductCard from './ProductCard.astro';
+
+const featuredProducts = [
+  {
+    id: 1,
+    title: "مصباح مكتب عصري",
+    price: 49.99,
+    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400"
+  },
+  {
+    id: 2,
+    title: "كرسي مريح",
+    price: 199.99,
+    image: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400"
+  }
+];
+---
+
+<section class="py-12">
+  <h2 class="text-2xl font-bold text-gray-900 mb-6">منتجات مميزة</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {featuredProducts.map(product => <ProductCard {...product} />)}
+  </div>
+</section>
